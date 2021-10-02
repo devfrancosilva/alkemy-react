@@ -1,5 +1,5 @@
 import { Navbar, Button } from "react-bootstrap";
-import { useAuthContext } from "../../../contexts/Auth";
+import { useAuthContext } from "../../../../contexts/Auth";
 
 export const NavBar = () => {
   const { logout } = useAuthContext();

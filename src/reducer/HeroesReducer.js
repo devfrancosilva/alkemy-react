@@ -1,8 +1,20 @@
-import { REMOVE_HEROE, SET_TEAM } from "../actions/HeroesActions";
+import {
+  ADD_HEROE,
+  CLOSE_MODAL_DETAILS,
+  REMOVE_HEROE,
+  SET_SEARCH_LIST,
+  SET_TEAM,
+  SHOW_MODAL_DETAILS,
+} from "../actions/HeroesActions";
 
 export const initialState = {
   team: [],
   teamStats: {},
+  searchList: [],
+  modalDetails: {
+    show: false,
+    data: null,
+  },
 };
 
 export const HeroesReducer = (state, action) => {
@@ -15,6 +27,8 @@ export const HeroesReducer = (state, action) => {
     let combat = 0;
     let weight = 0;
     let height = 0;
+    let badCount = 0;
+    let goodCount = 0;
 
     for (const heroe of team) {
       intelligence = intelligence + +heroe.powerstats.intelligence;
@@ -25,6 +39,9 @@ export const HeroesReducer = (state, action) => {
       combat = combat + +heroe.powerstats.combat;
       weight = weight + +heroe.appearance.weight[1].split(" ")[0];
       height = height + +heroe.appearance.height[1].split(" ")[0];
+      badCount = heroe.biography.alignment === "bad" ? badCount + 1 : badCount;
+      goodCount =
+        heroe.biography.alignment === "good" ? goodCount + 1 : goodCount;
     }
 
     let averageWeight = weight / team.length;
@@ -39,6 +56,10 @@ export const HeroesReducer = (state, action) => {
       combat,
       averageHeight,
       averageWeight,
+      alignment: {
+        bad: badCount,
+        good: goodCount,
+      },
     };
   };
 
@@ -59,6 +80,36 @@ export const HeroesReducer = (state, action) => {
         ),
       };
 
+    case SET_SEARCH_LIST:
+      return {
+        ...state,
+        searchList: action.payload,
+      };
+
+    case ADD_HEROE:
+      return {
+        ...state,
+        team: [...state.team, action.payload],
+        teamStats: calculateStats([...state.team, action.payload]),
+      };
+
+    case SHOW_MODAL_DETAILS:
+      return {
+        ...state,
+        modalDetails: {
+          show: true,
+          data: action.payload,
+        },
+      };
+
+    case CLOSE_MODAL_DETAILS:
+      return {
+        ...state,
+        modalDetails: {
+          show: false,
+          data: null,
+        },
+      };
     default:
       return state;
   }

@@ -1,5 +1,12 @@
 import { createContext, useReducer, useEffect, useContext } from "react";
-import { removeHeroe, setTeam } from "../actions/HeroesActions";
+import {
+  addHeroe,
+  closeModalDetails,
+  removeHeroe,
+  setSearchList,
+  setTeam,
+  showModalDetails,
+} from "../actions/HeroesActions";
 import { useFetchTeam } from "../hooks/useFetchTeam";
 import { HeroesReducer, initialState } from "../reducer/HeroesReducer";
 
@@ -14,13 +21,41 @@ export const HeroesContextProvider = ({ children }) => {
     dispatch(removeHeroe(id));
   };
 
+  const dispatchSetSearchList = (heroes) => {
+    dispatch(setSearchList(heroes));
+  };
+
+  const dispatchAddHeroe = (heroe) => {
+    dispatch(addHeroe(heroe));
+  };
+
+  const dispatchShowModalDetails = (heroe) => {
+    dispatch(showModalDetails(heroe));
+  };
+
+  const dispatchCloseModalDetails = () => {
+    dispatch(closeModalDetails());
+  };
+
   useEffect(() => {
     if (!loading && data.length) {
       dispatch(setTeam(data));
     }
   }, [loading, data]);
   return (
-    <Provider value={{ ...state, dispatchRemoveHeroe }}>{children}</Provider>
+    <Provider
+      value={{
+        ...state,
+        loadingTeam: loading,
+        dispatchRemoveHeroe,
+        dispatchSetSearchList,
+        dispatchAddHeroe,
+        dispatchShowModalDetails,
+        dispatchCloseModalDetails,
+      }}
+    >
+      {children}
+    </Provider>
   );
 };
 

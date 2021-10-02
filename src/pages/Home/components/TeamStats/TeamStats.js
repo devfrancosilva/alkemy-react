@@ -1,8 +1,15 @@
-import { ProgressBar } from "react-bootstrap";
-import { useHeroesContext } from "../../../contexts/HeroesContext";
+import { ProgressBar, Alert } from "react-bootstrap";
+import { useHeroesContext } from "../../../../contexts/HeroesContext";
 
 export const TeamStats = () => {
-  const { teamStats } = useHeroesContext();
+  const { teamStats, team } = useHeroesContext();
+
+  if (team.length === 0)
+    return (
+      <Alert variant="danger" className="text-center">
+        No team
+      </Alert>
+    );
   return (
     <div className="shadow p-3 my-5 bg-white rounded">
       <h3 className="text-center">Team Statistics</h3>
